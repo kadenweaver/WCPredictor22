@@ -21,7 +21,7 @@ export const FinalView = props => {
               <VStack spacing={'5px'} key={`${x.name}_stack`}>
                 <Text>{label}</Text>
                 <Button
-                  
+                  pointerEvents='none'
                   w="60vw"
                   bg={placeColor}
                   color="black"
