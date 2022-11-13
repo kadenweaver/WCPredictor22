@@ -35,7 +35,7 @@ export const SelectionView = props => {
             return (
               <Button
                 key={`${x.name}_button`}
-                w="60vw"
+                w="80vw"
                 bg={isSelected ? "blue.300" : "blue.600"}
                 // _active={{bg: "blue.300"}}
                 _selected={{bg: "blue.300"}}
