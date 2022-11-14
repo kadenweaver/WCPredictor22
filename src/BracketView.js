@@ -169,7 +169,7 @@ const SmallBracketBoxRight = props => {
     secondFlag,
   } = props;
   return (
-    <VStack spacing="0.5" alignItems="baseline">
+    <VStack spacing="0.5">
       <TeamFlex teamName={firstTeam} flagIcon={firstFlag} />
       <Box
         w="60px"
@@ -178,9 +178,9 @@ const SmallBracketBoxRight = props => {
         borderLeft="1px solid white"
         borderTop="1px solid white"
         borderBottom="1px solid white"
-        textAlign="start"
+        textAlign='end'
       >
-        <Text fontSize="10px" mb="39px">
+        <Text fontSize="10px" mb="39px" >
           {firstLabel}
         </Text>
         <Text fontSize="10px">{secondLabel}</Text>
