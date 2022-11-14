@@ -25,8 +25,8 @@ export const SelectionView = props => {
   const { teams, titleText, onNext, onSelect, selected, nextEnabled, level } = props;
   return (
     <Box pos='fixed'>
+      <Text fontSize="22px" mb='20px'>{titleText}</Text>
       <VStack spacing="10px" mb="20px" >
-        <Text fontSize="22px">{titleText}</Text>
         {teams &&
           teams.map(x => {
             const Flag = x.flagName && Flags[x.flagName];
@@ -36,6 +36,7 @@ export const SelectionView = props => {
               <Button
                 key={`${x.name}_button`}
                 w="80vw"
+                h='9vh'
                 bg={isSelected ? "blue.300" : "blue.600"}
                 // _active={{bg: "blue.300"}}
                 _selected={{bg: "blue.300"}}
@@ -56,7 +57,8 @@ export const SelectionView = props => {
           })}
       </VStack>
       <Button
-        w="60vw"
+        w="80vw"
+        h='7vh'
         mb='20px'
         bg={nextEnabled ? "green.300" : "gray.200"}
         color={nextEnabled ? "white" : "gray.400"}
@@ -65,7 +67,7 @@ export const SelectionView = props => {
       >
         Next
       </Button>
-      <HStack spacing='1.5' ml='10px' >
+      <HStack spacing='1.5' ml='8vw' >
         {[...Array(24).keys()].map(x => (
             <Circle size='5px' bg={x < level ? 'blue.600' : 'gray.300'} />
         ))}
