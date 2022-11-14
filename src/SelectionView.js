@@ -1,25 +1,12 @@
 import React from "react";
-import { Text, Button, Box, VStack, Icon, createIcon, HStack, Circle } from "@chakra-ui/react";
+import { Text, Button, Box, VStack, Icon, HStack, Circle } from "@chakra-ui/react";
 import Flags from "country-flag-icons/react/3x2";
 import {faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { England } from './England'
+import { Wales } from './Wales'
 
-const Wales = createIcon({
-    displayName: "Wales",
-    viewBox: "0 0 640 480",
-    path: (
-      <>
-        <path
-          fill="currentColor"
-          d="M0 240h640v240H0z"
-        />
-        <path
-          fill="currentColor"
-          d="M0 0h640v240H0z"
-        />
-      </>
-    ),
-  });
+
 
 export const SelectionView = props => {
   const { teams, titleText, onNext, onSelect, selected, nextEnabled, level } = props;
@@ -27,7 +14,7 @@ export const SelectionView = props => {
   return (
     <Box pos='fixed' px={bigWindow && '19vw'}>
       <Text fontSize="22px" mb='20px'>{titleText}</Text>
-      <VStack spacing={bigWindow ? "18px" : "10px"} mb="25px" >
+      <VStack spacing={bigWindow ? teams.length === 2 ? "22px" : "18px" : "10px"} mb="25px" >
         {teams &&
           teams.map(x => {
             const Flag = x.flagName && Flags[x.flagName];
@@ -39,12 +26,14 @@ export const SelectionView = props => {
                 w={bigWindow ? "40vw" : "80vw"}
                 h='9vh'
                 bg={isSelected ? "blue.300" : "blue.600"}
-                // _active={{bg: "blue.300"}}
+                _hover={{bg: "blue.100"}}
                 _selected={{bg: "blue.300"}}
                 _focus={{bg:"blue.300"}}
                 leftIcon={
-                  x.name === "Wales" ? (
-                    <Icon as={Wales}/>
+                  x.name === "England" ? (
+                    <Icon as={England}/>
+                  ) : x.name === "Wales" ? (
+                      <Icon as={Wales}/>
                   ) : (
                     <Icon as={Flag} />
                   )

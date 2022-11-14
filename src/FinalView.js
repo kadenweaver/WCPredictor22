@@ -3,6 +3,9 @@ import { Text, Button, Box, VStack, Icon } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Flags from "country-flag-icons/react/3x2";
+import { England } from './England'
+import { Wales } from './Wales'
+
 
 export const FinalView = props => {
   const { teams, titleText, onNext, setView } = props;
@@ -21,7 +24,7 @@ export const FinalView = props => {
         <Text fontSize='22px' fontWeight='bold'>{titleText}</Text>
         {teams &&
           teams.map((x, index) => {
-            const Flag = x.flagName && Flags[x.flagName];
+            const Flag = x.name === 'England' ? England : x.name === 'Wales' ? Wales : x.flagName && Flags[x.flagName];
             const placeColor = colorCodes.at(index);
             const label = labelTexts.at(index);
             return (

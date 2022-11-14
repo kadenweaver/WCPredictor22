@@ -169,7 +169,7 @@ export const StateEngine = (props) => {
         : stateLevel < 16
         ? `Round of 16:  ${levelKey}`
         : stateLevel < 20
-        ? `Quartefinal Match ${levelKey}`
+        ? `Quarterfinal Match ${levelKey}`
         : stateLevel < 22
         ? "Semifinal"
         : stateLevel < 23

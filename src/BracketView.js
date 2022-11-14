@@ -10,6 +10,8 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { England } from './England'
+import { Wales } from './Wales'
 
 const koLabels = [
   ["1A", "2B"],
@@ -53,7 +55,7 @@ const LateralLineL = props => {
 
 const TeamFlex = props => {
   const { flagIcon, teamName, champion, third } = props;
-  const Flag = Flags[flagIcon];
+  const Flag = teamName === 'ENG' ? England : teamName === 'WAL' ? Wales : Flags[flagIcon];
   return (
     <Flex flexDir="row" alignItems="center" px="3px">
       <Icon as={Flag} mr="3px" />
@@ -271,7 +273,7 @@ export const BracketView = props => {
   const isBigWindow = window.innerWidth > 650 
   return (
     <VStack alignItems={isBigWindow && 'start'}>
-      <Text fontWeight="bold" mt={isBigWindow ? '6vh' : "15px"} fontSize={isBigWindow ? '30px' : "20px"} ml={isBigWindow && '43.5vw'} mb={isBigWindow && '20px'}>
+      <Text fontWeight="bold" mt={isBigWindow ? '6vh' : "15px"} fontSize={isBigWindow ? '30px' : "20px"} ml={isBigWindow && '43vw'} mb={isBigWindow && '20px'}>
         World Cup 2022
       </Text>
       <Box w="100vw" h="100%" px={isBigWindow ? '38.5vw' : "5px"} ml={!isBigWindow && '20vw'}>
