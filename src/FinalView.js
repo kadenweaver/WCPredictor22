@@ -13,9 +13,11 @@ export const FinalView = props => {
       onNext(true)
       setView(true)
   }
+
+  const isBigWindow = window.innerWidth > 650
   return (
-    <Box ml='10vw'>
-      <VStack spacing="15px" mb='30px'>
+    <Box ml={isBigWindow && '18vw'}>
+      <VStack spacing={isBigWindow ? "25px" : "15px"} mb={isBigWindow ? '50px' : '30px'}>
         <Text fontSize='22px' fontWeight='bold'>{titleText}</Text>
         {teams &&
           teams.map((x, index) => {
@@ -27,7 +29,8 @@ export const FinalView = props => {
                 <Text>{label}</Text>
                 <Button
                   pointerEvents='none'
-                  w="60vw"
+                  w={isBigWindow ? '40vw' : "80vw"}
+                  h={isBigWindow ? '6vh' : undefined}
                   bg={placeColor}
                   color="black"
                   leftIcon={<Icon as={Flag} />}
@@ -38,7 +41,7 @@ export const FinalView = props => {
             );
           })}
       </VStack>
-      <Button rightIcon={<FontAwesomeIcon icon={faArrowRight} />} w='60vw' bg='blue.600' color='white' onClick={() => clickBracket()}>View Bracket</Button>
+      <Button rightIcon={<FontAwesomeIcon icon={faArrowRight} />} w={isBigWindow ? '40vw' : '80vw'} bg='blue.600' color='white' onClick={() => clickBracket()}>View Bracket</Button>
     </Box>
   );
 };

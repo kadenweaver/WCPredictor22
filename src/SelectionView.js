@@ -23,10 +23,11 @@ const Wales = createIcon({
 
 export const SelectionView = props => {
   const { teams, titleText, onNext, onSelect, selected, nextEnabled, level } = props;
+  const bigWindow = window.innerWidth > 650 
   return (
-    <Box pos='fixed'>
+    <Box pos='fixed' px={bigWindow && '19vw'}>
       <Text fontSize="22px" mb='20px'>{titleText}</Text>
-      <VStack spacing="10px" mb="25px" >
+      <VStack spacing={bigWindow ? "18px" : "10px"} mb="25px" >
         {teams &&
           teams.map(x => {
             const Flag = x.flagName && Flags[x.flagName];
@@ -35,7 +36,7 @@ export const SelectionView = props => {
             return (
               <Button
                 key={`${x.name}_button`}
-                w="80vw"
+                w={bigWindow ? "40vw" : "80vw"}
                 h='9vh'
                 bg={isSelected ? "blue.300" : "blue.600"}
                 // _active={{bg: "blue.300"}}
@@ -57,7 +58,7 @@ export const SelectionView = props => {
           })}
       </VStack>
       <Button
-        w="80vw"
+        w={bigWindow ? "40vw" : "80vw"}
         h='7vh'
         mb='20px'
         bg={nextEnabled ? "green.300" : "gray.200"}
@@ -67,9 +68,9 @@ export const SelectionView = props => {
       >
         Next
       </Button>
-      <HStack spacing='1.5' ml='8vw' >
+      <HStack spacing='1.5' ml={bigWindow ? '11vw' : '8vw'} >
         {[...Array(24).keys()].map(x => (
-            <Circle size='5px' bg={x < level ? 'blue.600' : 'gray.300'} />
+            <Circle size={bigWindow ? '8px' : '5px'} bg={x < level ? 'blue.600' : 'gray.300'} />
         ))}
       </HStack>
     </Box>

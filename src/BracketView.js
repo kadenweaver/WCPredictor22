@@ -268,13 +268,13 @@ export const BracketView = props => {
   );
   const leftSideThird = arrayPlaces.at(0) || arrayPlaces.at(1);
   const topThird = arrayPlaces.at(0) || arrayPlaces.at(2);
-
+  const isBigWindow = window.innerWidth > 650 
   return (
-    <Box>
-      <Text fontWeight="bold" mt="15px" fontSize="20px">
+    <VStack alignItems={isBigWindow && 'start'}>
+      <Text fontWeight="bold" mt={isBigWindow ? '6vh' : "15px"} fontSize={isBigWindow ? '30px' : "20px"} ml={isBigWindow && '43.5vw'} mb={isBigWindow && '20px'}>
         World Cup 2022
       </Text>
-      <Box w="100vw" h="100%" px="5px">
+      <Box w="100vw" h="100%" px={isBigWindow ? '38.5vw' : "5px"} ml={!isBigWindow && '20vw'}>
         <HStack spacing="0">
           <VStack spacing="6vh">
             {editedTeamsHist &&
@@ -364,6 +364,6 @@ export const BracketView = props => {
           </VStack>
         </HStack>
       </Box>
-    </Box>
+    </VStack>
   );
 };
