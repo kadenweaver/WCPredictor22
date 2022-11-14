@@ -140,8 +140,6 @@ export const StateEngine = (props) => {
     setSelectionHistory(currSelectHistory);
 
     if(stateLevel >= 8){
-      console.log(teams)
-      console.log(`adding ${teams} to teams`)
       let currTeamsHistory = teamsHistory.slice()
       currTeamsHistory.push(teams)
       setTeamsHistory(currTeamsHistory)
