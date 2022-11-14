@@ -5,11 +5,16 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import Flags from "country-flag-icons/react/3x2";
 
 export const FinalView = props => {
-  const { teams, titleText, onNext } = props;
+  const { teams, titleText, onNext, setView } = props;
   const colorCodes = ["#FFD700", "#C0C0C0", "#CD7F32"];
   const labelTexts = ["Champions", "Runners-up", "Third Place"];
+
+  const clickBracket = () => {
+      onNext(true)
+      setView(true)
+  }
   return (
-    <Box>
+    <Box ml='10vw'>
       <VStack spacing="15px" mb='30px'>
         <Text fontSize='22px' fontWeight='bold'>{titleText}</Text>
         {teams &&
@@ -33,7 +38,7 @@ export const FinalView = props => {
             );
           })}
       </VStack>
-      <Button rightIcon={<FontAwesomeIcon icon={faArrowRight} />} w='60vw' bg='blue.600' color='white' onClick={() => onNext(true)}>View Bracket</Button>
+      <Button rightIcon={<FontAwesomeIcon icon={faArrowRight} />} w='60vw' bg='blue.600' color='white' onClick={() => clickBracket()}>View Bracket</Button>
     </Box>
   );
 };

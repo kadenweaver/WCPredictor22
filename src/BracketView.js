@@ -270,7 +270,7 @@ export const BracketView = props => {
   const topThird = arrayPlaces.at(0) || arrayPlaces.at(2);
 
   return (
-    <Box w="100vw" h="100vh" textAlign='center'>
+    <Box>
       <Text fontWeight="bold" mt="15px" fontSize="20px">
         World Cup 2022
       </Text>

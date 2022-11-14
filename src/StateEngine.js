@@ -31,7 +31,8 @@ const levelToMatchCode = [
   "Final",
 ];
 
-export const StateEngine = () => {
+export const StateEngine = (props) => {
+  const {setView} = props
   const [stateLevel, setStateLevel] = useState(0);
   const [selection, setSelection] = useState([]);
   const [selectionHistory, setSelectionHistory] = useState([]);
@@ -182,7 +183,7 @@ export const StateEngine = () => {
   return bracketView ? (
     <BracketView teamsHistory={teamsHistory} topThree={teams}/>
   ) : stateLevel === levelToMatchCode.length ? (
-    <FinalView teams={teams} titleText="Final Results" onNext={setBracketView}/>
+    <FinalView teams={teams} titleText="Final Results" onNext={setBracketView} setView={setView}/>
   ) : (
     <SelectionView
       level={stateLevel}

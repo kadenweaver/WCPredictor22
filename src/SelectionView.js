@@ -26,7 +26,7 @@ export const SelectionView = props => {
   return (
     <Box pos='fixed'>
       <Text fontSize="22px" mb='20px'>{titleText}</Text>
-      <VStack spacing="10px" mb="20px" >
+      <VStack spacing="10px" mb="25px" >
         {teams &&
           teams.map(x => {
             const Flag = x.flagName && Flags[x.flagName];
