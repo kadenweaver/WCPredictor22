@@ -9,10 +9,10 @@ export const euro2024knockout = [
   { name: "Belgium", flagName: "BE", short: "BEL", koPosition: "2E" },
   { name: "Netherlands", flagName: "NL", short: "NED", koPosition: "3D" },
   { name: "Romania", flagName: "RO", short: "ROU", koPosition: "1E" },
-  { name: "Austria", flagName: "AT", short: "AUS", koPosition: "1D" },
+  { name: "Austria", flagName: "AT", short: "AUT", koPosition: "1D" },
   { name: "Turkiye", flagName: "TR", short: "TUR", koPosition: "2F" },
   { name: "England", short: "ENG", koPosition: "1C" },
-  { name: "Slovakia", flagName: "SK", short: "SLO", koPosition: "3E" },
+  { name: "Slovakia", flagName: "SK", short: "SVK", koPosition: "3E" },
   { name: "Switzerland", flagName: "CH", short: "SUI", koPosition: "2A" },
   { name: "Italy", flagName: "IT", short: "ITA", koPosition: "2B" },
 ];
