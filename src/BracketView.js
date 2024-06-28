@@ -1,28 +1,28 @@
 import React, { useMemo } from "react";
 import Flags from "country-flag-icons/react/3x2";
-import { faTrophy, faMedal } from "@fortawesome/free-solid-svg-icons";
-import {
-  Box,
-  Icon,
-  Text,
-  VStack,
-  HStack,
-  Flex,
-} from "@chakra-ui/react";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { Box, Icon, Text, VStack, HStack, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { England } from './England'
-import { Wales } from './Wales'
+import { euro2024knockout } from "./Groups";
+import { England } from "./England";
+import { Wales } from "./Wales";
+
+//{third && <FontAwesomeIcon icon={faMedal} color="#CD7F32" size="xs" />}
 
 const koLabels = [
-  ["1A", "2B"],
-  ["1C", "2D"],
-  ["1E", "2F"],
-  ["1G", "2H"],
-  ["1B", "2A"],
-  ["1D", "2C"],
-  ["1F", "2E"],
-  ["1H", "2G"],
+  ["1B", "3F"],
+  ["1A", "2C"],
+  ["1F", "3C"],
+  ["2D", "2E"],
+  ["1E", "3D"],
+  ["1D", "2F"],
+  ["1C", "3E"],
+  ["2A", "2B"],
 ];
+
+const LINE_WIDTH = "68px";
+const BOX_WIDTH = "55px";
+const BIG_BOX_WIDTH = "68px";
 
 const switchTeamsAtIndices = (array, indexOne, indexTwo) => {
   const switchedArr = array.slice();
@@ -38,7 +38,7 @@ const LateralLine = props => {
   return (
     <VStack spacing="0.5" alignItems="baseline">
       <TeamFlex teamName={teamName} flagIcon={flagIcon} champion={champion} />
-      <Box w="70px" h="2px" bg="white"></Box>
+      <Box w={LINE_WIDTH} h="2px" bg="white"></Box>
     </VStack>
   );
 };
@@ -48,14 +48,15 @@ const LateralLineL = props => {
   return (
     <VStack spacing="0.5" alignItems="baseline">
       <TeamFlex teamName={teamName} flagIcon={flagIcon} champion={champion} />
-      <Box w="71px" h="2px" bg="white" mr="10"></Box>
+      <Box w={LINE_WIDTH} h="2px" bg="white"></Box>
     </VStack>
   );
 };
 
 const TeamFlex = props => {
-  const { flagIcon, teamName, champion, third } = props;
-  const Flag = teamName === 'ENG' ? England : teamName === 'WAL' ? Wales : Flags[flagIcon];
+  const { flagIcon, teamName, champion } = props;
+  const Flag =
+    teamName === "ENG" ? England : teamName === "WAL" ? Wales : Flags[flagIcon];
   return (
     <Flex flexDir="row" alignItems="center" px="3px">
       <Icon as={Flag} mr="3px" />
@@ -63,7 +64,6 @@ const TeamFlex = props => {
         {teamName}
       </Text>
       {champion && <FontAwesomeIcon icon={faTrophy} color="#FFD700" />}
-      {third && <FontAwesomeIcon icon={faMedal} color="#CD7F32" size='xs'/>}
     </Flex>
   );
 };
@@ -81,7 +81,7 @@ const SmallBracketBoxLeft = props => {
     <VStack spacing="0.5" alignItems="baseline">
       <TeamFlex teamName={firstTeam} flagIcon={firstFlag} />
       <Box
-        w="60px"
+        w={BOX_WIDTH}
         h="70px"
         bg="none"
         borderRight="1px solid white"
@@ -104,7 +104,7 @@ const MediumBracketBoxLeft = props => {
     <VStack spacing="0.5" alignItems="baseline">
       <TeamFlex teamName={firstTeam} flagIcon={firstFlag} />
       <Box
-        w="60px"
+        w={BOX_WIDTH}
         h="147px"
         bg="none"
         borderRight="1px solid white"
@@ -126,7 +126,7 @@ const BigBracketBoxLeft = props => {
     finalTeamFlag,
     champion,
     third,
-    firstIsThird
+    firstIsThird,
   } = props;
   return (
     <VStack spacing="0.5" alignItems="baseline">
@@ -136,7 +136,7 @@ const BigBracketBoxLeft = props => {
         third={third && firstIsThird}
       />
       <Box
-        w="72px"
+        w={BIG_BOX_WIDTH}
         h="300px"
         bg={"none"}
         borderRight="1px solid white"
@@ -172,15 +172,15 @@ const SmallBracketBoxRight = props => {
     <VStack spacing="0.5">
       <TeamFlex teamName={firstTeam} flagIcon={firstFlag} />
       <Box
-        w="60px"
+        w={BOX_WIDTH}
         h="70px"
         bg="none"
         borderLeft="1px solid white"
         borderTop="1px solid white"
         borderBottom="1px solid white"
-        textAlign='end'
+        textAlign="end"
       >
-        <Text fontSize="10px" mb="39px" >
+        <Text fontSize="10px" mb="39px">
           {firstLabel}
         </Text>
         <Text fontSize="10px">{secondLabel}</Text>
@@ -196,7 +196,7 @@ const MediumBracketBoxRight = props => {
     <VStack spacing="0.5">
       <TeamFlex teamName={firstTeam} flagIcon={firstFlag} />
       <Box
-        w="60px"
+        w={BOX_WIDTH}
         h="147px"
         bg="none"
         borderLeft="1px solid white"
@@ -228,7 +228,7 @@ const BigBracketBoxRight = props => {
         third={third && firstIsThird}
       />
       <Box
-        w="72px"
+        w={BIG_BOX_WIDTH}
         h="300px"
         bg={"none"}
         borderLeft="1px solid white"
@@ -255,28 +255,43 @@ export const BracketView = props => {
   const { teamsHistory, topThree } = props;
   const editedTeamsHist = useMemo(() => {
     let editedTeams = teamsHistory.slice();
-    editedTeams = switchTeamsAtIndices(editedTeams, 1, 2);
-    editedTeams = switchTeamsAtIndices(editedTeams, 4, 2);
-    editedTeams = switchTeamsAtIndices(editedTeams, 5, 6);
-    editedTeams = switchTeamsAtIndices(editedTeams, 3, 5);
+
+    koLabels?.reverse()?.forEach(element => {
+      const key1 = element.at(0);
+      const key2 = element.at(1);
+      const teams = euro2024knockout.filter(
+        x => x.koPosition === key1 || x.koPosition === key2
+      );
+      editedTeams.unshift(teams);
+    });
+    editedTeams = switchTeamsAtIndices(editedTeams, 0, 7);
+    editedTeams = switchTeamsAtIndices(editedTeams, 1, 6);
+    editedTeams = switchTeamsAtIndices(editedTeams, 2, 5);
+    editedTeams = switchTeamsAtIndices(editedTeams, 3, 4);
+
     return editedTeams;
   }, [teamsHistory]);
-
-  const championLeft = topThree.at(0) === editedTeamsHist.at(15).at(0);
+  const championLeft =
+    topThree.at(0) === editedTeamsHist.at(editedTeamsHist.length - 1).at(0);
   let arrayThird = [...Array(4).fill(false)];
-  let arraySemis = editedTeamsHist.at(12).concat(editedTeamsHist.at(13));
+  let arraySemis = editedTeamsHist.at(4).concat(editedTeamsHist.at(5));
   let arrayPlaces = arrayThird.map((x, index) =>
     topThree.at(2) === arraySemis.at(index) ? true : x
   );
   const leftSideThird = arrayPlaces.at(0) || arrayPlaces.at(1);
   const topThird = arrayPlaces.at(0) || arrayPlaces.at(2);
-  const isBigWindow = window.innerWidth > 650 
+  const isBigWindow = window.innerWidth > 650;
   return (
-    <VStack alignItems={isBigWindow && 'start'}>
-      <Text fontWeight="bold" mt={isBigWindow ? '6vh' : "15px"} fontSize={isBigWindow ? '30px' : "20px"} ml={isBigWindow && '43vw'} mb={isBigWindow && '20px'}>
-        World Cup 2022
+    <Flex flexDir="column" w="100%" alignItems="center">
+      <Text
+        fontWeight="bold"
+        mt={isBigWindow ? "6vh" : "15px"}
+        fontSize={isBigWindow ? "30px" : "20px"}
+        mb={isBigWindow && "20px"}
+      >
+        Euro 2024
       </Text>
-      <Box w="100vw" h="100%" px={isBigWindow ? '38.5vw' : "5px"} ml={!isBigWindow && '20vw'}>
+      <Flex flexDir="column" outline="1px solid green" alignItems="center">
         <HStack spacing="0">
           <VStack spacing="6vh">
             {editedTeamsHist &&
@@ -314,8 +329,8 @@ export const BracketView = props => {
             secondTeam={editedTeamsHist.at(12).at(1).short}
             firstFlag={editedTeamsHist.at(12).at(0).flagName}
             secondFlag={editedTeamsHist.at(12).at(1).flagName}
-            finalTeam={editedTeamsHist.at(15).at(0).short}
-            finalTeamFlag={editedTeamsHist.at(15).at(0).flagName}
+            finalTeam={editedTeamsHist.at(14).at(0).short}
+            finalTeamFlag={editedTeamsHist.at(14).at(0).flagName}
             champion={championLeft}
             third={leftSideThird}
             firstIsThird={topThird}
@@ -326,8 +341,8 @@ export const BracketView = props => {
             secondTeam={editedTeamsHist.at(13).at(1).short}
             firstFlag={editedTeamsHist.at(13).at(0).flagName}
             secondFlag={editedTeamsHist.at(13).at(1).flagName}
-            finalTeam={editedTeamsHist.at(15).at(1).short}
-            finalTeamFlag={editedTeamsHist.at(15).at(1).flagName}
+            finalTeam={editedTeamsHist.at(14).at(1).short}
+            finalTeamFlag={editedTeamsHist.at(14).at(1).flagName}
             champion={!championLeft}
             third={!leftSideThird}
             firstIsThird={topThird}
@@ -365,7 +380,7 @@ export const BracketView = props => {
               )}
           </VStack>
         </HStack>
-      </Box>
-    </VStack>
+      </Flex>
+    </Flex>
   );
 };
