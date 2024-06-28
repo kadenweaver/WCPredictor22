@@ -264,10 +264,12 @@ export const BracketView = props => {
       );
       editedTeams.unshift(teams);
     });
+    /*
     editedTeams = switchTeamsAtIndices(editedTeams, 0, 7);
     editedTeams = switchTeamsAtIndices(editedTeams, 1, 6);
     editedTeams = switchTeamsAtIndices(editedTeams, 2, 5);
     editedTeams = switchTeamsAtIndices(editedTeams, 3, 4);
+    */
 
     return editedTeams;
   }, [teamsHistory]);
@@ -291,7 +293,7 @@ export const BracketView = props => {
       >
         Euro 2024
       </Text>
-      <Flex flexDir="column" outline="1px solid green" alignItems="center">
+      <Flex flexDir="column" alignItems="center">
         <HStack spacing="0">
           <VStack spacing="6vh">
             {editedTeamsHist &&
