@@ -24,6 +24,7 @@ const LINE_WIDTH = "68px";
 const BOX_WIDTH = "55px";
 const BIG_BOX_WIDTH = "68px";
 
+/*
 const switchTeamsAtIndices = (array, indexOne, indexTwo) => {
   const switchedArr = array.slice();
   const itemOne = switchedArr.at(indexOne);
@@ -32,6 +33,7 @@ const switchTeamsAtIndices = (array, indexOne, indexTwo) => {
   switchedArr[indexOne] = itemTwo;
   return switchedArr;
 };
+*/
 
 const LateralLine = props => {
   const { teamName, flagIcon, champion } = props;
@@ -301,8 +303,8 @@ export const BracketView = props => {
                 (x, index) =>
                   index < 4 && (
                     <SmallBracketBoxLeft
-                      firstLabel={koLabels.at(index).at(0)}
-                      secondLabel={koLabels.at(index).at(1)}
+                      firstLabel={x.at(0).koPosition}
+                      secondLabel={x.at(1).koPosition}
                       firstTeam={x.at(0).short}
                       secondTeam={x.at(1).short}
                       firstFlag={x.at(0).flagName}
@@ -371,8 +373,8 @@ export const BracketView = props => {
                   index > 3 &&
                   index < 8 && (
                     <SmallBracketBoxRight
-                      firstLabel={koLabels.at(index).at(0)}
-                      secondLabel={koLabels.at(index).at(1)}
+                      firstLabel={x.at(0).koPosition}
+                      secondLabel={x.at(1).koPosition}
                       firstTeam={x.at(0).short}
                       secondTeam={x.at(1).short}
                       firstFlag={x.at(0).flagName}
