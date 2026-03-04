@@ -103,25 +103,7 @@ export const StateEngine = props => {
       return stateLevel === 12
         ? [quarterFinalWinners.at(0), quarterFinalWinners.at(1)]
         : [quarterFinalWinners.at(2), quarterFinalWinners.at(3)];
-    } else if (stateLevel < 23) {
-      /*else if (stateLevel < 23) {
-      // third
-      const quarterFinalWinners = [1, 2, 3, 4].map(x =>
-        selectionHistory
-          .find(selec => selec.matchCode === x.toString())
-          .selection.at(0)
-      );
-      const s1Winner = selectionHistory
-        .find(x => x.matchCode === "S1")
-        .selection.at(0);
-      const s2Winner = selectionHistory
-        .find(x => x.matchCode === "S2")
-        .selection.at(0);
-      const thirdTeams = quarterFinalWinners.filter(
-        x => x !== s1Winner && x !== s2Winner
-      );
-      return thirdTeams;
-    }*/
+    } else if (stateLevel < 16) {
       //final
       const s1Winner = selectionHistory
         .find(x => x.matchCode === "S1")
@@ -148,6 +130,25 @@ export const StateEngine = props => {
 
       return [champion, runnerUp, third];
     }
+    /*else if (stateLevel < 16) {
+      /*else if (stateLevel < 23) {
+      // third
+      const quarterFinalWinners = [1, 2, 3, 4].map(x =>
+        selectionHistory
+          .find(selec => selec.matchCode === x.toString())
+          .selection.at(0)
+      );
+      const s1Winner = selectionHistory
+        .find(x => x.matchCode === "S1")
+        .selection.at(0);
+      const s2Winner = selectionHistory
+        .find(x => x.matchCode === "S2")
+        .selection.at(0);
+      const thirdTeams = quarterFinalWinners.filter(
+        x => x !== s1Winner && x !== s2Winner
+      );
+      return thirdTeams;
+    }*/
   }, [stateLevel, selectionHistory]);
 
   const maxTeams = teams.length / 2;
