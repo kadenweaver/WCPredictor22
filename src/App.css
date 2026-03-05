@@ -447,13 +447,15 @@ h3 {
 .ucl-svg-line line {
   stroke: #ffffff;
   stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .ucl-svg-title {
   fill: #f0f4f8;
-  font-size: 42px;
+  font-size: 54px;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   font-family: "DM Serif Display", Georgia, serif;
 }
 

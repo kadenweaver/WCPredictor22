@@ -561,28 +561,33 @@ const UclBracketBoard = ({
   const [pngFailed, setPngFailed] = useState(false);
   const boxW = 170;
   const boxH = 34;
+  const finalistBoxW = 150;
+  const finalistBoxH = 44;
+  const championBoxW = 260;
+  const championBoxH = 60;
   const leftR16X = 20;
-  const leftQFX = 230;
-  const leftSFX = 440;
-  const leftFinalistX = 600;
-  const championX = 695;
-  const rightFinalistX = 790;
-  const rightSFX = 950;
-  const rightQFX = 1160;
-  const rightR16X = 1370;
+  const leftQFX = 220;
+  const leftSFX = 420;
+  const leftFinalistX = 510;
+  const championX = 550;
+  const rightFinalistX = 680;
+  const rightSFX = 740;
+  const rightQFX = 940;
+  const rightR16X = 1140;
 
   const leftR16Join = 210;
-  const leftQFJoin = 420;
-  const leftSFJoin = 580;
-  const rightR16Join = 1360;
-  const rightQFJoin = 1150;
-  const rightSFJoin = 940;
+  const leftQFJoin = 410;
+  const leftSFJoin = 620;
+  const rightR16Join = 1130;
+  const rightQFJoin = 930;
+  const rightSFJoin = 710;
 
-  const r16Y = [130, 188, 246, 304, 362, 420, 478, 536];
-  const qfY = [159, 275, 391, 507];
-  const sfY = [217, 449];
-  const finalistY = 333;
-  const championY = 250;
+  const BRACKET_Y_OFFSET = 100;
+  const r16Y = [340, 450, 560, 670, 880, 990, 1100, 1210].map((value) => value + BRACKET_Y_OFFSET);
+  const qfY = [395, 615, 935, 1155].map((value) => value + BRACKET_Y_OFFSET);
+  const sfY = [505, 1045].map((value) => value + BRACKET_Y_OFFSET);
+  const finalistY = 810 + BRACKET_Y_OFFSET;
+  const championY = 360;
 
   const leftR16 = round16Matches.slice(0, 4).flatMap((match) => [
     { teamId: match.home, matchId: match.id },
@@ -647,22 +652,27 @@ const UclBracketBoard = ({
     return Boolean(winner && winner !== teamId);
   };
 
-  const renderTeamBox = ({ teamId, x, y, key, stageMatchId, championBox = false }) => {
+  const renderTeamBox = ({ teamId, x, y, key, stageMatchId, championBox = false, width = boxW, height = boxH }) => {
     const team = teamId ? teamById[teamId] : null;
     const teamName = team ? UCL_SHORT_NAMES[team.id] || team.name : "TBD";
     const isEliminated = stageMatchId ? isEliminatedAtStage(teamId, stageMatchId) : false;
     const logoWidth = 22;
     const logoHeight = 22;
     const logoX = x + 8;
-    const logoY = y + (boxH - logoHeight) / 2;
+    const logoY = y + (height - logoHeight) / 2;
+    const estimatedTextWidth = teamName.length * 7;
+    const combinedWidth = (team?.icon ? logoWidth + 8 : 0) + estimatedTextWidth;
+    const centeredStartX = x + Math.max(8, (width - combinedWidth) / 2);
+    const centeredLogoX = centeredStartX;
+    const centeredTextX = centeredStartX + (team?.icon ? logoWidth + 8 : 0);
 
     return (
       <g key={key}>
-        <rect x={x} y={y} width={boxW} height={boxH} rx={3} className={`ucl-svg-box ${championBox ? "champion" : ""}`.trim()} />
+        <rect x={x} y={y} width={width} height={height} rx={3} className={`ucl-svg-box ${championBox ? "champion" : ""}`.trim()} />
         {team?.icon ? (
           <image
             href={team.icon}
-            x={logoX}
+            x={championBox ? centeredLogoX : logoX}
             y={logoY}
             width={logoWidth}
             height={logoHeight}
@@ -671,8 +681,8 @@ const UclBracketBoard = ({
           />
         ) : null}
         <text
-          x={x + (team?.icon ? 34 : 8)}
-          y={y + 22}
+          x={championBox ? centeredTextX : x + (team?.icon ? 34 : 8)}
+          y={y + height / 2 + 6}
           className={`ucl-svg-team-name ${championBox ? "champion" : ""} ${isEliminated ? "eliminated struck" : ""}`.trim()}
         >
           {teamName}
@@ -709,8 +719,8 @@ const UclBracketBoard = ({
         const styleNode = document.createElementNS("http://www.w3.org/2000/svg", "style");
         styleNode.textContent = `
           .ucl-svg-bg { fill: #223a57; }
-          .ucl-svg-line line { stroke: #ffffff; stroke-width: 3; }
-          .ucl-svg-title { fill: #f0f4f8; font-size: 42px; font-weight: 500; letter-spacing: .04em; font-family: "DM Serif Display", Georgia, serif; }
+          .ucl-svg-line line { stroke: #ffffff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+          .ucl-svg-title { fill: #f0f4f8; font-size: 54px; font-weight: 500; letter-spacing: .03em; font-family: "DM Serif Display", Georgia, serif; }
           .ucl-svg-winner-label { fill: #f3e7bf; font-size: 15px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; font-family: "DM Serif Display", Georgia, serif; }
           .ucl-svg-box { fill: #ffffff; stroke: #d7dde5; stroke-width: 1.4; }
           .ucl-svg-box.champion { fill: #fff9e9; stroke: #cfad43; stroke-width: 2; }
@@ -812,16 +822,16 @@ const UclBracketBoard = ({
 
       <svg
         ref={svgRef}
-        viewBox="0 0 1560 620"
+        viewBox="0 0 1360 1780"
         className="ucl-bracket-svg is-source"
         role="img"
         aria-label="Champions League knockout bracket"
       >
-        <rect x="0" y="0" width="1560" height="620" className="ucl-svg-bg" />
-        <text x="780" y="82" textAnchor="middle" className="ucl-svg-title">
+        <rect x="0" y="0" width="1360" height="1780" className="ucl-svg-bg" />
+        <text x="680" y="112" textAnchor="middle" className="ucl-svg-title">
           {titleText}
         </text>
-        <text x={championX + boxW / 2} y={championY - 10} textAnchor="middle" className="ucl-svg-winner-label">
+        <text x={championX + championBoxW / 2} y={championY - 14} textAnchor="middle" className="ucl-svg-winner-label">
           {winnerText}
         </text>
 
@@ -857,7 +867,6 @@ const UclBracketBoard = ({
           <line x1={leftSFX + boxW} y1={sfY[0] + boxH / 2} x2={leftSFJoin} y2={sfY[0] + boxH / 2} />
           <line x1={leftSFX + boxW} y1={sfY[1] + boxH / 2} x2={leftSFJoin} y2={sfY[1] + boxH / 2} />
           <line x1={leftSFJoin} y1={sfY[0] + boxH / 2} x2={leftSFJoin} y2={sfY[1] + boxH / 2} />
-          <line x1={leftSFJoin} y1={finalistY + boxH / 2} x2={leftFinalistX} y2={finalistY + boxH / 2} />
         </g>
 
         {[0, 1, 2, 3].map((pair) => {
@@ -892,7 +901,6 @@ const UclBracketBoard = ({
           <line x1={rightSFX} y1={sfY[0] + boxH / 2} x2={rightSFJoin} y2={sfY[0] + boxH / 2} />
           <line x1={rightSFX} y1={sfY[1] + boxH / 2} x2={rightSFJoin} y2={sfY[1] + boxH / 2} />
           <line x1={rightSFJoin} y1={sfY[0] + boxH / 2} x2={rightSFJoin} y2={sfY[1] + boxH / 2} />
-          <line x1={rightSFJoin} y1={finalistY + boxH / 2} x2={rightFinalistX + boxW} y2={finalistY + boxH / 2} />
         </g>
 
         {leftR16.map((slot, index) =>
@@ -955,6 +963,8 @@ const UclBracketBoard = ({
           x: leftFinalistX,
           y: finalistY,
           key: "left-finalist",
+          width: finalistBoxW,
+          height: finalistBoxH,
         })}
         {renderTeamBox({
           teamId: finalists[1].teamId,
@@ -962,6 +972,8 @@ const UclBracketBoard = ({
           x: rightFinalistX,
           y: finalistY,
           key: "right-finalist",
+          width: finalistBoxW,
+          height: finalistBoxH,
         })}
         {renderTeamBox({
           teamId: champion,
@@ -969,9 +981,11 @@ const UclBracketBoard = ({
           y: championY,
           key: "champion",
           championBox: true,
+          width: championBoxW,
+          height: championBoxH,
         })}
 
-        <text x="780" y="590" textAnchor="middle" className="ucl-svg-footer">
+        <text x="680" y="1730" textAnchor="middle" className="ucl-svg-footer">
           {footerText}
         </text>
       </svg>
