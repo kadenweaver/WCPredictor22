@@ -559,6 +559,7 @@ const UclBracketBoard = ({
   const [pngSrc, setPngSrc] = useState("");
   const [isPngLoading, setIsPngLoading] = useState(true);
   const [pngFailed, setPngFailed] = useState(false);
+  const previousPngUrlRef = useRef("");
   const boxW = 170;
   const boxH = 34;
   const finalistBoxW = 150;
@@ -760,7 +761,10 @@ const UclBracketBoard = ({
 
         image.onload = () => {
           const viewBox = svgElement.viewBox.baseVal;
-          const scale = Math.max(2, Math.min(4, Math.ceil(window.devicePixelRatio || 1) * 2));
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent || "");
+          const scale = isMobile
+            ? Math.min(2, Math.ceil(window.devicePixelRatio || 1))
+            : Math.max(2, Math.min(4, Math.ceil(window.devicePixelRatio || 1) * 2));
           const canvas = document.createElement("canvas");
           canvas.width = Math.round(viewBox.width * scale);
           canvas.height = Math.round(viewBox.height * scale);
@@ -777,9 +781,31 @@ const UclBracketBoard = ({
           context.fillStyle = "#223a57";
           context.fillRect(0, 0, canvas.width, canvas.height);
           context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          setPngSrc(canvas.toDataURL("image/png", 1));
-          setIsPngLoading(false);
-          URL.revokeObjectURL(blobUrl);
+          canvas.toBlob(
+            (pngBlob) => {
+              URL.revokeObjectURL(blobUrl);
+              if (isCancelled) {
+                return;
+              }
+
+              if (!pngBlob) {
+                setIsPngLoading(false);
+                setPngFailed(true);
+                setPngSrc("");
+                return;
+              }
+
+              const objectUrl = URL.createObjectURL(pngBlob);
+              if (previousPngUrlRef.current) {
+                URL.revokeObjectURL(previousPngUrlRef.current);
+              }
+              previousPngUrlRef.current = objectUrl;
+              setPngSrc(objectUrl);
+              setIsPngLoading(false);
+            },
+            "image/png",
+            0.92
+          );
         };
 
         image.onerror = () => {
@@ -808,6 +834,14 @@ const UclBracketBoard = ({
     };
   }, [round16Matches, round16Picks, quarterPicks, semiPicks, champion, titleText, winnerText, footerText]);
 
+  useEffect(() => {
+    return () => {
+      if (previousPngUrlRef.current) {
+        URL.revokeObjectURL(previousPngUrlRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="ucl-bracket-board">
       {isPngLoading ? <div className="ucl-bracket-loading">{loadingText}</div> : null}
@@ -816,6 +850,11 @@ const UclBracketBoard = ({
           src={pngSrc}
           alt="Champions League knockout bracket"
           className="ucl-bracket-image"
+          onError={() => {
+            setPngFailed(true);
+            setPngSrc("");
+            setIsPngLoading(false);
+          }}
         />
       ) : null}
       {!isPngLoading && !pngSrc && pngFailed ? <div className="ucl-bracket-loading">{unavailableText}</div> : null}
