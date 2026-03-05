@@ -188,7 +188,7 @@ const WC26_GROUPS = [
       { id: "brazil", name: "Brazil", flag: "🇧🇷" },
       { id: "morocco", name: "Morocco", flag: "🇲🇦" },
       { id: "haiti", name: "Haiti", flag: "🇭🇹" },
-      { id: "scotland", name: "Scotland", flag: "🏴" },
+      { id: "scotland", name: "Scotland", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}" },
     ],
   },
   {
@@ -266,7 +266,7 @@ const WC26_GROUPS = [
   {
     group: "L",
     teams: [
-      { id: "england", name: "England", flag: "🏴" },
+      { id: "england", name: "England", flag: "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}" },
       { id: "croatia", name: "Croatia", flag: "🇭🇷" },
       { id: "ghana", name: "Ghana", flag: "🇬🇭" },
       { id: "panama", name: "Panama", flag: "🇵🇦" },
@@ -523,7 +523,7 @@ const getRunnerUp = (winnerId, match) => {
   return winnerId === match.home ? match.away : match.home;
 };
 
-const UCL_SHORT_NAMES = {
+const SHORT_NAMES = {
   psg: "PSG",
   chelsea: "Chelsea",
   galatasaray: "Galatasaray",
@@ -542,9 +542,12 @@ const UCL_SHORT_NAMES = {
   arsenal: "Arsenal",
 };
 
-const UclBracketBoard = ({
+const KnockoutBracketBoard = ({
   teamById,
   round16Matches,
+  quarterMatches,
+  semiMatches,
+  finalMatch,
   round16Picks,
   quarterPicks,
   semiPicks,
@@ -554,6 +557,7 @@ const UclBracketBoard = ({
   footerText,
   loadingText,
   unavailableText,
+  thirdPlaceTeamId,
 }) => {
   const svgRef = useRef(null);
   const [pngSrc, setPngSrc] = useState("");
@@ -600,54 +604,44 @@ const UclBracketBoard = ({
   ]);
 
   const leftQF = [
-    { teamId: round16Picks["UCL-R16-1"] || null, matchId: "UCL-QF-1" },
-    { teamId: round16Picks["UCL-R16-2"] || null, matchId: "UCL-QF-1" },
-    { teamId: round16Picks["UCL-R16-3"] || null, matchId: "UCL-QF-2" },
-    { teamId: round16Picks["UCL-R16-4"] || null, matchId: "UCL-QF-2" },
+    { teamId: round16Picks[round16Matches[0]?.id] || null, matchId: quarterMatches[0]?.id },
+    { teamId: round16Picks[round16Matches[1]?.id] || null, matchId: quarterMatches[0]?.id },
+    { teamId: round16Picks[round16Matches[2]?.id] || null, matchId: quarterMatches[1]?.id },
+    { teamId: round16Picks[round16Matches[3]?.id] || null, matchId: quarterMatches[1]?.id },
   ];
   const rightQF = [
-    { teamId: round16Picks["UCL-R16-5"] || null, matchId: "UCL-QF-3" },
-    { teamId: round16Picks["UCL-R16-6"] || null, matchId: "UCL-QF-3" },
-    { teamId: round16Picks["UCL-R16-7"] || null, matchId: "UCL-QF-4" },
-    { teamId: round16Picks["UCL-R16-8"] || null, matchId: "UCL-QF-4" },
+    { teamId: round16Picks[round16Matches[4]?.id] || null, matchId: quarterMatches[2]?.id },
+    { teamId: round16Picks[round16Matches[5]?.id] || null, matchId: quarterMatches[2]?.id },
+    { teamId: round16Picks[round16Matches[6]?.id] || null, matchId: quarterMatches[3]?.id },
+    { teamId: round16Picks[round16Matches[7]?.id] || null, matchId: quarterMatches[3]?.id },
   ];
 
   const leftSF = [
-    { teamId: quarterPicks["UCL-QF-1"] || null, matchId: "UCL-SF-1" },
-    { teamId: quarterPicks["UCL-QF-2"] || null, matchId: "UCL-SF-1" },
+    { teamId: quarterPicks[quarterMatches[0]?.id] || null, matchId: semiMatches[0]?.id },
+    { teamId: quarterPicks[quarterMatches[1]?.id] || null, matchId: semiMatches[0]?.id },
   ];
   const rightSF = [
-    { teamId: quarterPicks["UCL-QF-3"] || null, matchId: "UCL-SF-2" },
-    { teamId: quarterPicks["UCL-QF-4"] || null, matchId: "UCL-SF-2" },
+    { teamId: quarterPicks[quarterMatches[2]?.id] || null, matchId: semiMatches[1]?.id },
+    { teamId: quarterPicks[quarterMatches[3]?.id] || null, matchId: semiMatches[1]?.id },
   ];
 
   const finalists = [
-    { teamId: semiPicks["UCL-SF-1"] || null, side: "left" },
-    { teamId: semiPicks["UCL-SF-2"] || null, side: "right" },
+    { teamId: semiPicks[semiMatches[0]?.id] || null, side: "left" },
+    { teamId: semiPicks[semiMatches[1]?.id] || null, side: "right" },
   ];
+  const semiMatchIds = new Set(semiMatches.map((match) => match.id));
 
   const isEliminatedAtStage = (teamId, stageMatchId) => {
     if (!teamId) {
       return false;
     }
 
-    const winners = {
-      "UCL-R16-1": round16Picks["UCL-R16-1"],
-      "UCL-R16-2": round16Picks["UCL-R16-2"],
-      "UCL-R16-3": round16Picks["UCL-R16-3"],
-      "UCL-R16-4": round16Picks["UCL-R16-4"],
-      "UCL-R16-5": round16Picks["UCL-R16-5"],
-      "UCL-R16-6": round16Picks["UCL-R16-6"],
-      "UCL-R16-7": round16Picks["UCL-R16-7"],
-      "UCL-R16-8": round16Picks["UCL-R16-8"],
-      "UCL-QF-1": quarterPicks["UCL-QF-1"],
-      "UCL-QF-2": quarterPicks["UCL-QF-2"],
-      "UCL-QF-3": quarterPicks["UCL-QF-3"],
-      "UCL-QF-4": quarterPicks["UCL-QF-4"],
-      "UCL-SF-1": semiPicks["UCL-SF-1"],
-      "UCL-SF-2": semiPicks["UCL-SF-2"],
-      "UCL-F": champion,
-    };
+    const winners = Object.fromEntries([
+      ...round16Matches.map((match) => [match.id, round16Picks[match.id]]),
+      ...quarterMatches.map((match) => [match.id, quarterPicks[match.id]]),
+      ...semiMatches.map((match) => [match.id, semiPicks[match.id]]),
+      [finalMatch.id, champion],
+    ]);
 
     const winner = winners[stageMatchId];
     return Boolean(winner && winner !== teamId);
@@ -655,22 +649,34 @@ const UclBracketBoard = ({
 
   const renderTeamBox = ({ teamId, x, y, key, stageMatchId, championBox = false, width = boxW, height = boxH }) => {
     const team = teamId ? teamById[teamId] : null;
-    const teamName = team ? UCL_SHORT_NAMES[team.id] || team.name : "TBD";
+    const teamName = team ? SHORT_NAMES[team.id] || team.name : "TBD";
     const isEliminated = stageMatchId ? isEliminatedAtStage(teamId, stageMatchId) : false;
     const logoWidth = 22;
     const logoHeight = 22;
+    const flagWidth = 18;
     const logoX = x + 8;
     const logoY = y + (height - logoHeight) / 2;
+    const hasImageIcon = Boolean(team?.icon);
+    const hasFlagIcon = !hasImageIcon && Boolean(team?.flag);
+    const visualWidth = hasImageIcon ? logoWidth : hasFlagIcon ? flagWidth : 0;
     const estimatedTextWidth = teamName.length * 7;
-    const combinedWidth = (team?.icon ? logoWidth + 8 : 0) + estimatedTextWidth;
+    const combinedWidth = (visualWidth ? visualWidth + 8 : 0) + estimatedTextWidth;
     const centeredStartX = x + Math.max(8, (width - combinedWidth) / 2);
     const centeredLogoX = centeredStartX;
-    const centeredTextX = centeredStartX + (team?.icon ? logoWidth + 8 : 0);
+    const centeredFlagX = centeredStartX + flagWidth / 2;
+    const centeredTextX = centeredStartX + (visualWidth ? visualWidth + 8 : 0);
+    const showThirdPlaceMarker =
+      !championBox &&
+      Boolean(teamId) &&
+      Boolean(thirdPlaceTeamId) &&
+      teamId === thirdPlaceTeamId &&
+      Boolean(stageMatchId) &&
+      semiMatchIds.has(stageMatchId);
 
     return (
       <g key={key}>
         <rect x={x} y={y} width={width} height={height} rx={3} className={`ucl-svg-box ${championBox ? "champion" : ""}`.trim()} />
-        {team?.icon ? (
+        {hasImageIcon ? (
           <image
             href={team.icon}
             x={championBox ? centeredLogoX : logoX}
@@ -681,13 +687,28 @@ const UclBracketBoard = ({
             className="ucl-svg-logo"
           />
         ) : null}
+        {hasFlagIcon ? (
+          <text
+            x={championBox ? centeredFlagX : x + 8 + flagWidth / 2}
+            y={y + height / 2 + 6}
+            className="ucl-svg-flag"
+            textAnchor="middle"
+          >
+            {team.flag}
+          </text>
+        ) : null}
         <text
-          x={championBox ? centeredTextX : x + (team?.icon ? 34 : 8)}
+          x={championBox ? centeredTextX : x + (visualWidth ? visualWidth + 12 : 8)}
           y={y + height / 2 + 6}
           className={`ucl-svg-team-name ${championBox ? "champion" : ""} ${isEliminated ? "eliminated struck" : ""}`.trim()}
         >
           {teamName}
         </text>
+        {showThirdPlaceMarker ? (
+          <text x={x + width - 7} y={y + height - 5} className="ucl-svg-third-marker" textAnchor="end">
+            3
+          </text>
+        ) : null}
       </g>
     );
   };
@@ -708,6 +729,34 @@ const UclBracketBoard = ({
         reader.readAsDataURL(blob);
       });
 
+    const loadImage = (src) =>
+      new Promise((resolve, reject) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+      });
+
+    const rasterizeBlobToPngDataUrl = async (blob, width, height) => {
+      const blobUrl = URL.createObjectURL(blob);
+      try {
+        const source = await loadImage(blobUrl);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(width || source.naturalWidth || 32));
+        canvas.height = Math.max(1, Math.round(height || source.naturalHeight || 32));
+        const context = canvas.getContext("2d");
+        if (!context) {
+          throw new Error("Canvas 2D context unavailable");
+        }
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(source, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL("image/png");
+      } finally {
+        URL.revokeObjectURL(blobUrl);
+      }
+    };
+
     const buildPng = async () => {
       setIsPngLoading(true);
       setPngFailed(false);
@@ -726,10 +775,12 @@ const UclBracketBoard = ({
           .ucl-svg-box { fill: #ffffff; stroke: #d7dde5; stroke-width: 1.4; }
           .ucl-svg-box.champion { fill: #fff9e9; stroke: #cfad43; stroke-width: 2; }
           .ucl-svg-logo { width: 22px; height: 22px; }
+          .ucl-svg-flag { font-size: 18px; }
           .ucl-svg-team-name { fill: #10233a; font-size: 14px; font-weight: 600; }
           .ucl-svg-team-name.champion { fill: #4a3c0f; }
           .ucl-svg-team-name.eliminated { fill: #67778a; }
           .ucl-svg-team-name.struck { text-decoration: line-through; text-decoration-color: currentColor; text-decoration-thickness: 1.5px; text-decoration-skip-ink: none; }
+          .ucl-svg-third-marker { fill: #10233a; font-size: 12px; font-weight: 700; }
           .ucl-svg-footer { fill: rgba(240,244,248,.55); font-size: 14px; letter-spacing: .03em; }
         `;
         clonedSvg.insertBefore(styleNode, clonedSvg.firstChild);
@@ -748,7 +799,14 @@ const UclBracketBoard = ({
               return;
             }
             const blob = await response.blob();
-            const dataUrl = await toDataUrl(blob);
+            const targetWidth = Number.parseFloat(imageNode.getAttribute("width") || "") || 32;
+            const targetHeight = Number.parseFloat(imageNode.getAttribute("height") || "") || 32;
+            let dataUrl = "";
+            try {
+              dataUrl = await rasterizeBlobToPngDataUrl(blob, targetWidth, targetHeight);
+            } catch {
+              dataUrl = await toDataUrl(blob);
+            }
             imageNode.setAttribute("href", dataUrl);
             imageNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", dataUrl);
           })
@@ -998,7 +1056,7 @@ const UclBracketBoard = ({
         )}
         {renderTeamBox({
           teamId: finalists[0].teamId,
-          stageMatchId: "UCL-F",
+          stageMatchId: finalMatch.id,
           x: leftFinalistX,
           y: finalistY,
           key: "left-finalist",
@@ -1007,7 +1065,7 @@ const UclBracketBoard = ({
         })}
         {renderTeamBox({
           teamId: finalists[1].teamId,
-          stageMatchId: "UCL-F",
+          stageMatchId: finalMatch.id,
           x: rightFinalistX,
           y: finalistY,
           key: "right-finalist",
@@ -1575,40 +1633,23 @@ const App = () => {
           })}
         </div>
 
-        <div className="snapshot-grid">
-          <div>
-            <h3>{t("summary.r32")}</h3>
-            <ul>
-              {round32Matches.map((match) => (
-                <li key={match.id}>{TEAM_BY_ID[round32Picks[match.id]]?.name || "TBD"}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3>{t("summary.r16")}</h3>
-            <ul>
-              {round16Matches.map((match) => (
-                <li key={match.id}>{TEAM_BY_ID[round16Picks[match.id]]?.name || "TBD"}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3>{t("summary.qf")}</h3>
-            <ul>
-              {quarterMatches.map((match) => (
-                <li key={match.id}>{TEAM_BY_ID[quarterPicks[match.id]]?.name || "TBD"}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3>{t("summary.sf")}</h3>
-            <ul>
-              {semiMatches.map((match) => (
-                <li key={match.id}>{TEAM_BY_ID[semiPicks[match.id]]?.name || "TBD"}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <KnockoutBracketBoard
+          teamById={TEAM_BY_ID}
+          round16Matches={round16Matches}
+          quarterMatches={quarterMatches}
+          semiMatches={semiMatches}
+          finalMatch={finalMatch}
+          round16Picks={round16Picks}
+          quarterPicks={quarterPicks}
+          semiPicks={semiPicks}
+          champion={champion}
+          titleText={t("tournament.world-cup-2026.name")}
+          winnerText={t("ucl.board.winner")}
+          footerText={t("ucl.board.footer")}
+          loadingText={t("ucl.board.loading")}
+          unavailableText={t("ucl.board.unavailable")}
+          thirdPlaceTeamId={thirdPlaceWinner}
+        />
 
         <button type="button" className="primary-cta" onClick={resetToLanding}>
           {t("cta.another")}
@@ -1730,9 +1771,12 @@ const App = () => {
         })}
       </div>
 
-      <UclBracketBoard
+      <KnockoutBracketBoard
         teamById={TEAM_BY_ID}
         round16Matches={UCL_ROUND16_MATCHES}
+        quarterMatches={uclQuarterMatches}
+        semiMatches={uclSemiMatches}
+        finalMatch={uclFinalMatch}
         round16Picks={uclRound16Picks}
         quarterPicks={uclQuarterPicks}
         semiPicks={uclSemiPicks}
